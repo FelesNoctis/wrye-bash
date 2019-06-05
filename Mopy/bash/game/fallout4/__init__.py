@@ -33,7 +33,8 @@ class Fallout4GameInfo(GameInfo):
     fsName = u'Fallout4'
     altName = u'Wrye Flash'
     defaultIniFile = u'Fallout4_default.ini'
-    exe = u'Fallout4.exe'
+    game_detect_file = [u'Fallout4.exe']
+    launch_exe = u'Fallout4.exe'
     masterFiles = [u'Fallout4.esm']
     iniFiles = [u'Fallout4.ini', u'Fallout4Prefs.ini', u'Fallout4Custom.ini', ]
     pklfile = ur'bash\db\Fallout4_ids.pkl'
@@ -118,7 +119,7 @@ class Fallout4GameInfo(GameInfo):
         # This rule is to allow mods with string translation enabled.
         'interface\\translations':['.txt']
     }
-    SkipBAINRefresh = {u'fo4edit backups'}
+    SkipBAINRefresh = {u'fo4edit backups', u'fo4edit cache'}
 
     class esp(GameInfo.esp):
         canBash = True

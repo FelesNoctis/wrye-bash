@@ -34,7 +34,9 @@ class SkyrimGameInfo(GameInfo):
     fsName = u'Skyrim'
     altName = u'Wrye Smash'
     defaultIniFile = u'Skyrim_default.ini'
-    exe = u'TESV.exe'
+    # Set to this because TESV.exe also exists for Enderal
+    game_detect_file = [u'SkyrimLauncher.exe']
+    launch_exe = u'TESV.exe'
     masterFiles = [u'Skyrim.esm', u'Update.esm']
     iniFiles = [u'Skyrim.ini', u'SkyrimPrefs.ini']
     pklfile = r'bash\db\Skyrim_ids.pkl'
@@ -132,7 +134,7 @@ class SkyrimGameInfo(GameInfo):
         # This rule is to allow mods with string translation enabled.
         'interface\\translations':['.txt']
     }
-    SkipBAINRefresh = {u'tes5edit backups'}
+    SkipBAINRefresh = {u'tes5edit backups', u'tes5edit cache'}
     ignoreDataDirs = {u'LSData'}
 
     class esp(GameInfo.esp):

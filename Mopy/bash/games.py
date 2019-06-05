@@ -48,7 +48,7 @@ def _write_plugins_txt_(path, lord, active, _star):
             __write_plugins(out, lord, active, _star)
 
 def __write_plugins(out, lord, active, _star):
-    def asterisk(active_set=set(active)):
+    def asterisk(active_set=frozenset(active)):
         return '*' if _star and (mod in active_set) else ''
     for mod in (_star and lord) or active:
         # Ok, this seems to work for Oblivion, but not Skyrim
@@ -189,6 +189,7 @@ class Game(object):
     must_be_active_if_present = ()
     max_espms = 255
     max_esls = 0
+    _star = False # whether plugins.txt uses a star to denote an active plugin
 
     def __init__(self, mod_infos, plugins_txt_path):
         super(Game, self).__init__()
@@ -350,11 +351,11 @@ class Game(object):
         """:rtype: (list[bolt.Path], list[bolt.Path])"""
         if not path.exists(): return [], []
         #--Read file
-        acti, _lo = _parse_plugins_txt_(path, self.mod_infos, _star=False)
+        acti, _lo = _parse_plugins_txt_(path, self.mod_infos, _star=self._star)
         return acti, _lo
 
     def _write_modfile(self, path, lord, active):
-        _write_plugins_txt_(path, lord, active, _star=False)
+        _write_plugins_txt_(path, lord, active, _star=self._star)
 
     # PLUGINS TXT -------------------------------------------------------------
     def _parse_plugins_txt(self):
@@ -460,8 +461,10 @@ class Game(object):
         # check if we have more than 256 active mods
         drop_espms, drop_esls = self.check_active_limit(acti_filtered)
         disable = drop_espms | drop_esls
-        if disable: # chop off extra, update acti in place
-            acti[:] = [x for x in acti_filtered if x not in disable]
+        # update acti in place - this must always be done, since acti may
+        # contain files that are no longer on disk (i.e. not in acti_filtered)
+        acti[:] = [x for x in acti_filtered if x not in disable]
+        if disable: # chop off extra
             self.mod_infos.selectedExtra = fix_active.selectedExtra = [
                 x for x in acti_filtered if x in disable]
         before_reorder = acti # with overflowed plugins removed
@@ -739,6 +742,7 @@ class AsteriskGame(Game):
     max_espms = 254
     max_esls = 4096 # hard limit, game runs out of fds sooner, testing needed
     _ccc_filename = u''
+    _star = True
 
     @property
     def remove_from_plugins_txt(self): return set()
@@ -800,15 +804,6 @@ class AsteriskGame(Game):
         if (previous_lord is None or previous_lord != lord) or (
                 previous_active is None or previous_active != active):
             self._persist_load_order(lord, active)
-
-    # Modfiles parsing overrides ----------------------------------------------
-    def _parse_modfile(self, path):
-        if not path.exists(): return [], []
-        acti, lo = _parse_plugins_txt_(path, self.mod_infos, _star=True)
-        return acti, lo
-
-    def _write_modfile(self, path, lord, active):
-        _write_plugins_txt_(path, lord, active, _star=True)
 
     # Validation overrides ----------------------------------------------------
     def _order_fixed(self, lord):

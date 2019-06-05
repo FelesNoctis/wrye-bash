@@ -34,7 +34,8 @@ class SkyrimSEGameInfo(SkyrimGameInfo):
     fsName = u'Skyrim Special Edition'
     altName = u'Wrye Smash'
     defaultIniFile = u'Skyrim_Default.ini'
-    exe = u'SkyrimSE.exe'
+    game_detect_file = [u'SkyrimSE.exe']
+    launch_exe = u'SkyrimSE.exe'
     regInstallKeys = (
         u'Bethesda Softworks\\Skyrim Special Edition',
         u'Installed Path'
@@ -79,6 +80,8 @@ class SkyrimSEGameInfo(SkyrimGameInfo):
         sd_abbrev = u''
         long_name = u''
         install_dir = u''
+
+    SkipBAINRefresh = {u'sseedit backups', u'sseedit cache'}
 
     @classmethod
     def init(cls):

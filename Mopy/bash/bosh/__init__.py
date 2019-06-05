@@ -812,6 +812,10 @@ class ModInfo(FileInfo):
         :param resource_path: The path to the plugin-name-specific directory,
         as a list of path components.
         """
+        # If resource_path is empty, then we would effectively query
+        # self.dir.join(self.name), which always exists - that's the mod file!
+        if not resource_path:
+            return False
         return self.dir.join(*resource_path).join(self.name).exists()
 
 #------------------------------------------------------------------------------
@@ -1058,7 +1062,8 @@ class SaveInfo(FileInfo):
 
 #------------------------------------------------------------------------------
 class DataStore(DataDict):
-    store_dir = empty_path # where the datas sit, static except for SaveInfos
+    """Base class for the singleton collections of infos."""
+    store_dir = empty_path # where the data sit, static except for SaveInfos
 
     def delete(self, delete_keys, **kwargs):
         """Deletes member file(s)."""
@@ -1993,7 +1998,10 @@ class ModInfos(FileInfos):
             if not doCBash and reOblivion.match(fileName.s): continue
             fileInfo = self[fileName]
             # do not mark esls as esl capable
-            if fileInfo.is_esl() or not bush.game.esp.canBash:
+            if fileInfo.is_esl():
+                if return_results: reasons.append(u'Already ESL-flagged.')
+                canMerge = False
+            elif not bush.game.esp.canBash:
                 canMerge = False
             else:
                 try:
@@ -2963,7 +2971,7 @@ def initDefaultTools():
     tooldirs['OBFEL'] = pathlist(u'Oblivion Face Exchange Lite',u'OblivionFaceExchangeLite.exe')
     tooldirs['ArtOfIllusion'] = pathlist(u'ArtOfIllusion',u'Art of Illusion.exe')
     tooldirs['ABCAmberAudioConverter'] = pathlist(u'ABC Amber Audio Converter',u'abcaudio.exe')
-    tooldirs['GimpShop'] = pathlist(u'GIMPshop',u'bin',u'gimp-2.2.exe')
+    tooldirs['Krita'] = pathlist(u'Krita (x86)',u'bin',u'krita.exe')
     tooldirs['PixelStudio'] = pathlist(u'Pixel',u'Pixel.exe')
     tooldirs['TwistedBrush'] = pathlist(u'Pixarra',u'TwistedBrush Open Studio',u'tbrush_open_studio.exe')
     tooldirs['PhotoScape'] = pathlist(u'PhotoScape',u'PhotoScape.exe')

@@ -103,11 +103,13 @@ class StatusBar_Button(ItemLink):
     @property
     def obseVersion(self):
         if bass.inisettings['SteamInstall']:
-            se_exe = bush.game.se.steam_exe
+            se_exe = bass.dirs['app'].join(bush.game.se.steam_exe)
         else:
-            se_exe = bush.game.se.exe
-        version = bass.dirs['app'].join(se_exe).strippedVersion
-        return u'.'.join([u'%s'%x for x in version])
+            se_exe = bass.dirs['app'].join(bush.game.se.exe)
+        if se_exe.isfile():
+            return u'.'.join([u'%s' % x for x in se_exe.strippedVersion])
+        else:
+            return u''
 
 #------------------------------------------------------------------------------
 # App Links -------------------------------------------------------------------
@@ -247,7 +249,7 @@ class App_Button(StatusBar_Button):
             exeObse = bass.dirs['app'].join(bush.game.se.exe)
             exeLaa = bass.dirs['app'].join(bush.game.laa.exe)
             if BashStatusBar.laaButton.button_state and \
-                            self.exePath.tail == bush.game.exe:
+                            self.exePath.tail == bush.game.launch_exe:
                 # Should use the LAA Launcher
                 exePath = exeLaa
                 args = [exePath.s]

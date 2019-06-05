@@ -69,7 +69,7 @@ def get_registry_path(subkey, entry, exe):
 def get_registry_game_path(submod):
     """Check registry supplied game paths for the game.exe."""
     subkey, entry = submod.regInstallKeys
-    return get_registry_path(subkey, entry, submod.exe)
+    return get_registry_path(subkey, entry, submod.launch_exe)
 
 try: # Python27\Lib\site-packages\win32comext\shell
     from win32com.shell import shell, shellcon
@@ -331,17 +331,96 @@ def test_permissions(path, permissions='rwcd'):
 
 # OS agnostic get file version function and helper functions
 def get_file_version(filename):
-    """Return the version of a dll/exe, using the native win32 functions
+    """
+    Return the version of a dll/exe, using the native win32 functions
     if available and otherwise a pure python implementation that works
-    on Linux. The return value is a 4-int tuple, for example (1.9.32.0)."""
+    on Linux.
+
+    :param filename: The file from which the version should be read.
+    :return A 4-int tuple, for example (1, 9, 32, 0).
+    """
+    # If it's a symbolic link (i.e. a user-added app), resolve it first
+    if win32client and filename.endswith(u'.lnk'):
+        sh = win32client.Dispatch(u'WScript.Shell')
+        shortcut = sh.CreateShortCut(filename)
+        filename = shortcut.TargetPath
     if win32api is None:
+        # TODO(inf) The linux method needs support for string fields
         return _linux_get_file_version_info(filename)
     else:
-        info = win32api.GetFileVersionInfo(filename, u'\\')
-        ms = info['FileVersionMS']
-        ls = info['FileVersionLS']
-        return win32api.HIWORD(ms), win32api.LOWORD(ms), \
-               win32api.HIWORD(ls), win32api.LOWORD(ls)
+        # These are ordered to maximize performance: fixed field with
+        # FileVersion is almost always enough, so that's first. SSE needs the
+        # string fields with ProductVersion, so that's the second one. After
+        # that, we prefer the fixed one since it's faster.
+        curr_ver = _query_fixed_field_version(filename, u'FileVersion')
+        if not _should_ignore_ver(curr_ver):
+            return curr_ver
+        curr_ver = _query_string_field_version(filename, u'ProductVersion')
+        if not _should_ignore_ver(curr_ver):
+            return curr_ver
+        curr_ver = _query_fixed_field_version(filename, u'ProductVersion')
+        if not _should_ignore_ver(curr_ver):
+            return curr_ver
+        return _query_string_field_version(filename, u'FileVersion')
+
+def _should_ignore_ver(test_ver):
+    """
+    Small helper method to determine whether or not a version should be
+    ignored. Versions are ignored if they are 1.0.0.0 or 0.0.0.0.
+
+    :param test_ver: The version to test. A tuple containing 4 integers.
+    :return: True if the specified versiom should be ignored.
+    """
+    return test_ver == (1, 0, 0, 0) or test_ver == (0, 0, 0, 0)
+
+def _query_string_field_version(file_name, version_prefix):
+    """
+    Retrieves the version with the specified prefix from the specified file via
+    its string fields.
+
+    :param file_name: The file from which the version should be read.
+    :param version_prefix: The prefix to use. Can be either FileVersion or
+    ProductVersion.
+    :return: A 4-tuple of integers containing the version of the file.
+    """
+    # We need to ask for language and copepage first, before we can
+    # query the actual version.
+    l_query = u'\\VarFileInfo\\Translation'
+    try:
+        lang, codepage = win32api.GetFileVersionInfo(file_name, l_query)[0]
+    except win32api.error:
+        # File does not have a string field section
+        return (0, 0, 0, 0)
+    ver_query = u'\\StringFileInfo\\%04X%04X\\%s' % (lang, codepage,
+                                                     version_prefix)
+    full_ver = win32api.GetFileVersionInfo(file_name, ver_query)
+    # xSE uses commas in its version fields, so use this 'heuristic'
+    splitter = u',' if u',' in full_ver else u'.'
+    try:
+        return tuple([int(part) for part in full_ver.split(splitter)])
+    except ValueError:
+        return 0, 0, 0, 0
+
+def _query_fixed_field_version(file_name, version_prefix):
+    """
+    Retrieves the version with the specified prefix from the specified file via
+    its fixed fields. This is faster than using the string fields, but not all
+    EXEs set them (e.g. SkyrimSE.exe).
+
+    :param file_name: The file from which the version should be read.
+    :param version_prefix: The prefix to use. Can be either FileVersion or
+    ProductVersion.
+    :return: A 4-tuple of integers containing the version of the file.
+    """
+    try:
+        info = win32api.GetFileVersionInfo(file_name, u'\\')
+    except win32api.error:
+        # File does not have a fixed field section
+        return (0, 0, 0, 0)
+    ms = info[u'%sMS' % version_prefix]
+    ls = info[u'%sLS' % version_prefix]
+    return win32api.HIWORD(ms), win32api.LOWORD(ms), win32api.HIWORD(ls), \
+           win32api.LOWORD(ls)
 
 def _linux_get_file_version_info(filename):
     """A python replacement for win32api.GetFileVersionInfo that can be used
@@ -492,13 +571,13 @@ def _fileOperation(operation, source, target=None, allowUndo=True,
     _source = source; _target = target
     if __shell and shell is not None:
         # flags
-        flags = shellcon.FOF_WANTMAPPINGHANDLE # enables mapping return value !
-        flags |= FOF_NOCONFIRMMKDIR # never ask user for creating dirs
-        flags |= (len(target) > 1) * shellcon.FOF_MULTIDESTFILES
-        if allowUndo: flags |= shellcon.FOF_ALLOWUNDO
-        if not confirm: flags |= shellcon.FOF_NOCONFIRMATION
-        if renameOnCollision: flags |= shellcon.FOF_RENAMEONCOLLISION
-        if silent: flags |= shellcon.FOF_SILENT
+        flgs = shellcon.FOF_WANTMAPPINGHANDLE # enables mapping return value !
+        flgs |= FOF_NOCONFIRMMKDIR # never ask user for creating dirs
+        flgs |= (len(target) > 1) * shellcon.FOF_MULTIDESTFILES
+        if allowUndo: flgs |= shellcon.FOF_ALLOWUNDO
+        if not confirm: flgs |= shellcon.FOF_NOCONFIRMATION
+        if renameOnCollision: flgs |= shellcon.FOF_RENAMEONCOLLISION
+        if silent: flgs |= shellcon.FOF_SILENT
         # null terminated strings
         source = u'\x00'.join(source) # nope: + u'\x00'
         target = u'\x00'.join(target)
@@ -509,7 +588,7 @@ def _fileOperation(operation, source, target=None, allowUndo=True,
         # aborted: True if any operations aborted, False otherwise
         # mapping: maps the old and new names of the renamed files
         result, aborted, mapping = shell.SHFileOperation(
-                (parent, operation, source, target, flags, None, None))
+                (parent, operation, source, target, flgs, None, None))
         if result == 0:
             if aborted: raise SkipError()
             return dict(mapping)
