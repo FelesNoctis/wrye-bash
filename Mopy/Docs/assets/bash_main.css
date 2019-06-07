@@ -126,7 +126,7 @@ h3 {
 }
 #header {
 	display: flex;
-	background: rgba(154, 205, 50, 1) url("../../bash/images/bash_head.png") 0.75rem 0.75rem/1.875rem 2.0625rem no-repeat; 	/* 12px 12px / 30px 33px */
+	background: rgba(154, 205, 50, 1) url("../../../Mopy/bash/images/bash_head.png") 0.75rem 0.75rem/1.875rem 2.0625rem no-repeat; 	/* 12px 12px / 30px 33px */
 	width: 100%;
 	flex: 0 0 3.5625rem;			/* 57px */
 	font-size: 0.75rem;				/* 12px */
