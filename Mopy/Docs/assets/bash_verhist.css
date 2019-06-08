@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*
 Main Overrides
 */
@@ -7,17 +8,38 @@ li {
 .JS-on #fade, .JS-on .navhead, .JS-on #spantest {
 	display: none;
 	visibility: hidden;
+=======
+/********************
+* Main Overrides
+********************/
+
+li {
+  margin-bottom: 0.1875rem;		/* 3px */
+}
+.JS-on #fade, .JS-on .navhead, .JS-on #spantest {
+  display: none;
+  visibility: hidden;
+>>>>>>> feles-docedit-postcred-dev-final
 }
 
-/*
-Extracted inlines from Version Readme are listed below
-*/
+
+/********************
+* Extracted Inlines
+********************/
+
 /* Text Formatting */
 .history-veranc {
+<<<<<<< HEAD
   font-size: 1rem;					/* 16px */
   font-style: italic;
   font-weight: bold;
   margin-top: 1.875rem;				/* 30px */
+=======
+  font-size: 1rem;				/* 16px */
+  font-style: italic;
+  font-weight: bold;
+  margin-top: 1.875rem;			/* 30px */
+>>>>>>> feles-docedit-postcred-dev-final
 }
 .v295_1-gmemng {
   color: rgba(165, 42, 42, 1);
