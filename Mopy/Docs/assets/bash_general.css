@@ -6,12 +6,7 @@ ul li img {
   margin-left: 0.375rem;			/* 6px */
   margin-right: 0.375rem;			/* 6px */
   max-height: 0.8125rem;			/* 13px */
-<<<<<<< HEAD
-  max-width: 0.8125rem;				/* 13px */
-  vertical-align: middle;
-=======
   max-width: 0.8125rem;			/* 13px */
->>>>>>> feles-docedit-postcred-dev-final
 }
 ul li, ul li img, ul li span {
   vertical-align: middle;
@@ -21,23 +16,6 @@ ul.nodot li {
   margin-left: -1.25rem;			/* 20px */
 }
 img.bigcred {
-<<<<<<< HEAD
-  max-height: 2rem;					/* 32px */
-  max-width: 2rem;					/* 32px */
-}
-img.monkeygod {
-  max-height: 4rem;					/* 64px */
-  max-width: 4rem;					/* 64px */
-}
-
-/*
-Main Overrides
-*/
-.prlflex.tap figure {
-  max-width: 99%;
-}
-.prlflex.tap img {
-=======
   max-height: 2rem;				/* 32px */
   max-width: 2rem;				/* 32px */
 }
@@ -51,27 +29,12 @@ img.monkeygod {
 *Main Overrides
 ********************/
 .prlflex.tap figure, .prlflex.tap img {
->>>>>>> feles-docedit-postcred-dev-final
   max-width: 99%;
 }
 .prlflex.tap {
   justify-content: center;
 }
 
-<<<<<<< HEAD
-/*
-Extracted inlines from General Readme are listed below
-*/
-/* Figure Captions */
-.bain-overview-figcap {
-  padding-top: 39.6875rem;			/* 635px */
-}
-.patch-overview-figcap {
-  padding-top: 38.3125rem;			/* 613px */
-}
-.ini-overview-figcap {
-  padding-top: 39.6875rem;			/* 635px */
-=======
 /********************
 * Extracted inlines from General Readme are listed below
 ********************/
@@ -82,7 +45,6 @@ Extracted inlines from General Readme are listed below
 }
 .patch-overview-figcap {
   padding-top: 38.3125rem;		/* 613px */
->>>>>>> feles-docedit-postcred-dev-final
 }
 .launchers-figcap {
   padding-top: 5rem;				/* 80px */

@@ -1,12 +1,3 @@
-<<<<<<< HEAD
-/*
-Extracted inlines from Advanced Readme are listed below
-*/
-/* Figures */
-.mods-details-figure {
-  width: 19.875rem;					/* 318px */
-  min-height: 34.4375rem;			/* 551px */
-=======
 /********************
 * Extracted Inlines
 ********************/
@@ -15,56 +6,27 @@ Extracted inlines from Advanced Readme are listed below
 .mods-details-figure {
   min-height: 34.4375rem;			/* 551px */
   width: 19.875rem;				/* 318px */
->>>>>>> feles-docedit-postcred-dev-final
 }
 .tools-checker-figure {
   width: 29.6875rem;				/* 475px */
 }
 
 /* Figure Captions */
-<<<<<<< HEAD
-.screenshots-overview-figcap {
-=======
 .screenshots-overview-figcap, .people-overview-figcap {
->>>>>>> feles-docedit-postcred-dev-final
   padding-top: 40rem;				/* 640px */
 }
 .launchers-hide-figcap {
   padding-top: 5.9375rem;			/* 95px */
-<<<<<<< HEAD
-}
-.people-overview-figcap {
-  padding-top: 40rem;				/* 640px */
-}
-.tools-settings-figcap {
-  padding-top: 25rem;				/* 640px */
-}
-.tools-docs-figcap {
-  padding-top: 32.5rem;				/* 520px */
-=======
 }
 .tools-settings-figcap {
   padding-top: 25rem;				/* 400px */
 }
 .tools-docs-figcap {
   padding-top: 32.5rem;			/* 520px */
->>>>>>> feles-docedit-postcred-dev-final
 }
 
 /* Tables */
 .people-tables {
-<<<<<<< HEAD
-  min-width: 17.1875rem;			/* 30px */
-  margin-top: 1.875rem;				/* 30px */
-}
-#people-commands {
-	margin-right: -100%;
-	padding-left: 1.0625rem;		/* 17px */
-}
-#people-symbols {
-	padding-left: 13.5625rem;		/* 217px */
-	margin-left: -12.5rem;			/* -200px */
-=======
   margin-top: 1.875rem;			/* 30px */
   min-width: 17.1875rem;			/* 275px */
 }
@@ -75,7 +37,6 @@ Extracted inlines from Advanced Readme are listed below
 #people-symbols {
   margin-left: -12.5rem;			/* -200px */
   padding-left: 13.5625rem;		/* 217px */
->>>>>>> feles-docedit-postcred-dev-final
 }
 .tools-colors-table {
   max-width: 98%;
@@ -84,27 +45,6 @@ Extracted inlines from Advanced Readme are listed below
 /* Consistency Formatting */
 .people-tabpad {
   margin: 0;
-<<<<<<< HEAD
-  margin-bottom: 1rem;				/* 16px */
-}
-.international-format-cdebox {
-  width: 25rem;						/* 400px */
-}
-code.box {
-  display: table;
-  line-height: 1.25rem;				/* 20px */
-  margin: 0.875rem 0 0 1.125rem;	/* 14px 18px */
-  padding: 0.3125rem 0.625rem;		/* 5px 10px */
-  white-space: pre;
-}
-
-/* Text Formatting */
-.install-components {
-  color: rgba(223, 0, 0, 1);
-  font-size: 1rem;					/* 16px */
-  font-style: italic;
-  font-weight: bold;
-=======
   margin-bottom: 1rem;			/* 16px */
 }
 .international-format-cdebox {
@@ -116,5 +56,4 @@ code.box {
   margin: 0.875rem 0 0 1.125rem;	/* T:14px R:0 B:0 L:18px */
   padding: 0.3125rem 0.625rem;	/* TB:5px RL:10px */
   white-space: pre;
->>>>>>> feles-docedit-postcred-dev-final
 }
